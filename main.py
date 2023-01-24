@@ -103,6 +103,19 @@ def check_video_files(result_df):
             print(f"Video for kanji '{kanji}' missing! Expected '{video_path}'")
 
 
+def create_chars_file(csv_path, out_file):
+    charmap = dict()
+    with open(csv_path, "r") as csv:
+        char = csv.read(1)
+        while char:
+            if char not in charmap:
+                charmap[char] = 1
+            char = csv.read(1)
+    with open(out_file, "w") as out:
+        for char in charmap.keys():
+            out.write(char)
+            out.write(' ')
+
 if __name__ == '__main__':
     result_df = pandas.DataFrame()
     process_ka_data_csv(result_df)
@@ -111,3 +124,4 @@ if __name__ == '__main__':
     check_audio_files(result_df)
     check_video_files(result_df)
     result_df.to_csv("out/kanji_data.csv", index=False)
+    create_chars_file("out/kanji_data.csv", "out/kanji_data_chars.txt")
